@@ -1,25 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import About from './components/About';
+import AssessmentTasks from './components/AssessmentTasks';
+import Contact from './components/Contact';
+import Register from './components/Register';
+import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
-function App() {
+const AppContent = () => {
+  const location = useLocation();
+  const isAuthRoute = ['/login', '/register'].includes(location.pathname);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!isAuthRoute && <Navbar />}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/about" 
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/assessment-tasks" 
+          element={
+            <ProtectedRoute>
+              <AssessmentTasks />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/contact" 
+          element={
+            <ProtectedRoute>
+              <Contact />
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </>
   );
+}
+
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <AppContent />
+      </Router>
+    );
+  }
 }
 
 export default App;
